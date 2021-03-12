@@ -1,2 +1,2 @@
-# It's a project where I using a Api from Nasa to get Astronomy Picture from selected day
+# It's a project where I using an Api from Nasa to get Astronomy Picture from selected day
 
