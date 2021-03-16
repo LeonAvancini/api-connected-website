@@ -12,60 +12,117 @@ const Container = styled.div`
   margin: 0 auto;
 `;
 
-const Title = styled.h1`
-  color: black;
+const MainTitle = styled.h1`
+  display: flex;
+  color: white;
+  align-items: center;
+`;
+const Copyright = styled.p`
+  display: flex;
+  color: white;
 `;
 
-const ImageTitle = styled.h1`
-  color: black;
+const ImageTitle = styled.h2`
+  color: lightblue;
 `;
 
 const DatePickerStyled = styled(DatePicker)`
   border-radius: 10px;
-  font-size: 25px;
+  font-size: 20px;
+  text-align: center;
+  padding: 5px 10px 5px 10px;
+  box-sizing: content-box;
+  width: 120px;
+  margin-left: 10px;
+  font-weight: bold;
+`;
+
+const ImageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
 `;
 
 const Image = styled.img`
   border-radius: 5px;
 `;
 
+const ErrorMessage = styled.h3`
+  border: 1px solid red;
+  color: white;
+  padding: 20px;
+  border-radius: 5px;
+`;
+
 export default () => {
-  const [test, setTest] = useState<any>({});
+  const [dataGetted, setDataGetted] = useState<any>({});
+  const [error, setError] = useState(false);
   const [startDate, setStartDate] = useState<Date | null | undefined>(
     new Date()
   );
 
   const dateFormatted = formatDate(startDate ?? new Date());
-
-  //FIXME: API DATA WEBSITE === https://api.nasa.gov/index.html
   const API_KEY: string = "api_key=J9c8DvGBTzcqvhFd8UPQIJqhzJ80Ractk3JBOiRx";
   const baseUrl = "https://api.nasa.gov";
 
   const fetchData = async () => {
-    const response = await fetch(
-      `${baseUrl}/planetary/apod?date=${dateFormatted}&${API_KEY}`
-    );
-    const data = await response.json();
-    setTest(data);
-    console.log("datos", test);
+    try {
+      const response = await fetch(
+        `${baseUrl}/planetary/apod?date=${dateFormatted}&${API_KEY}`
+      );
+      const data = await response.json();
+      setDataGetted(data);
+    } catch {
+      setError(true);
+    }
   };
 
   useEffect(() => {
     fetchData();
   }, [dateFormatted]);
 
-  return (
-    <div>
+  if (dataGetted.code === 400 || dataGetted.code === 404 || error) {
+    return (
       <Container>
-        <Title onClick={() => fetchData()}>Api Connected Website</Title>{" "}
-        <Title>{`Astronomy Picture of the ${dateFormatted}`}</Title>
+        <MainTitle>
+          {`Astronomy Picture of the`}
+          <DatePickerStyled
+            selected={startDate}
+            onChange={(date: Date) => setStartDate(date)}
+          />
+        </MainTitle>
+        <ErrorMessage>
+          {dataGetted.msg ?? "We have a error, please refresh page"}
+        </ErrorMessage>
+      </Container>
+    );
+  }
+
+  return (
+    <Container>
+      <MainTitle>
+        {`Astronomy Picture of the`}
         <DatePickerStyled
           selected={startDate}
           onChange={(date: Date) => setStartDate(date)}
         />
-        <ImageTitle>{test.title}</ImageTitle>
-          <Image width="50%" height="50%" src={`${test.url}`} />
-      </Container>
-    </div>
+      </MainTitle>
+      <ImageTitle>{dataGetted.title}</ImageTitle>
+      <ImageContainer>
+        {dataGetted.url !== undefined && dataGetted.url.includes("youtube") ? (
+          <iframe width="420" height="315" src={dataGetted.url}></iframe>
+        ) : (
+          <Image
+            title={dataGetted.explanation}
+            width="50%"
+            height="50%"
+            src={`${dataGetted.url}`}
+          />
+        )}
+        <Copyright>{dataGetted.copyright ?? "Anonymous"}</Copyright>
+      </ImageContainer>
+    </Container>
   );
 };
