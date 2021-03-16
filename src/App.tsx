@@ -12,8 +12,11 @@ const Container = styled.div`
   margin: 0 auto;
 `;
 
-const MainTitle = styled.h1`
+const MainTitleContainer = styled.div`
   display: flex;
+  align-items: center;
+`;
+const MainTitle = styled.h1`
   color: white;
   align-items: center;
 `;
@@ -86,13 +89,13 @@ export default () => {
   if (dataGetted.code === 400 || dataGetted.code === 404 || error) {
     return (
       <Container>
-        <MainTitle>
-          {`Astronomy Picture of the`}
+        <MainTitleContainer>
+          <MainTitle>Astronomy Picture of the</MainTitle>
           <DatePickerStyled
             selected={startDate}
             onChange={(date: Date) => setStartDate(date)}
           />
-        </MainTitle>
+        </MainTitleContainer>
         <ErrorMessage>
           {dataGetted.msg ?? "We have a error, please refresh page"}
         </ErrorMessage>
@@ -102,13 +105,13 @@ export default () => {
 
   return (
     <Container>
-      <MainTitle>
-        {`Astronomy Picture of the`}
+      <MainTitleContainer>
+        <MainTitle>Astronomy Picture of the</MainTitle>
         <DatePickerStyled
           selected={startDate}
           onChange={(date: Date) => setStartDate(date)}
         />
-      </MainTitle>
+      </MainTitleContainer>
       <ImageTitle>{dataGetted.title}</ImageTitle>
       <ImageContainer>
         {dataGetted.url !== undefined && dataGetted.url.includes("youtube") ? (
