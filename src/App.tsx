@@ -17,19 +17,26 @@ const MainTitleContainer = styled.div`
   align-items: center;
 `;
 const MainTitle = styled.h1`
+  font-family: "Syne Mono", monospace;
   color: white;
   align-items: center;
 `;
 const Copyright = styled.p`
+  font-family: 'Roboto Mono', monospace;
   display: flex;
   color: white;
+  padding 10px 20px;
+  border-top:1px solid #add8e6;
 `;
 
 const ImageTitle = styled.h2`
-  color: lightblue;
+  font-family: "Roboto Mono", monospace;
+  color: #add8e6;
+  font-size: 27px;
 `;
 
 const DatePickerStyled = styled(DatePicker)`
+  font-family: "Syne Mono", monospace;
   border-radius: 10px;
   font-size: 20px;
   text-align: center;
@@ -46,6 +53,8 @@ const ImageContainer = styled.div`
   justify-content: center;
   align-items: center;
   margin: 0;
+  width: 80%;
+  height: 80%;
 `;
 
 const Image = styled.img`
@@ -119,8 +128,8 @@ export default () => {
         ) : (
           <Image
             title={dataGetted.explanation}
-            width="50%"
-            height="50%"
+            width="100%"
+            height="100%"
             src={`${dataGetted.url}`}
           />
         )}
@@ -129,3 +138,6 @@ export default () => {
     </Container>
   );
 };
+function useWindowDimensions(): { height: any; width: any } {
+  throw new Error("Function not implemented.");
+}
